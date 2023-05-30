@@ -1,0 +1,54 @@
+{{- define "worker" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: combine-social
+  name: {{ .workerName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeline-worker
+  template:
+    metadata:
+      labels:
+        app: timeline-worker
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - timeline-worker
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: worker
+        image: ghcr.io/combine-social/timeline-worker:1.1.1
+        resources:
+          requests:
+            memory: "1024Mi"
+        env:
+        - name: WORKER_ID
+          value: {{ .workerId }}
+        - name: REDIS_URL
+          value: "redis://redis"
+        - name: POLL_INTERVAL
+          value: "300"
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: timeline-secret
+              key: dburl
+        - name: QUEUE_URL
+          valueFrom:
+            secretKeyRef:
+              name: toottail-secret
+              key: rabbitmq-url
+{{- end -}}
+---
+{{- include "worker" (dict "workerName" "timeline-worker-1" "workerId" "'1'") }}
+---
+{{- include "worker" (dict "workerName" "timeline-worker-2" "workerId" "'2'") }}

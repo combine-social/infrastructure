@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: combine-social
+  name: timeline-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeline-web
+  template:
+    metadata:
+      labels:
+        app: timeline-web
+    spec:
+      containers:
+      - name: web
+        image: ghcr.io/combine-social/timeline-web:1.0.1
+        resources:
+          requests:
+            memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: timeline-web
+  namespace: combine-social
+spec:
+  type: ClusterIP
+  ports:
+  - name: timeline-web
+    port: 3000
+    targetPort: 3000
+  selector:
+    app: timeline-web

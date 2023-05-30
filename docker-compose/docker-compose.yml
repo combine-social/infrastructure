@@ -1,0 +1,86 @@
+version: "3.9"
+services:
+  api:
+    image: ghcr.io/combine-social/timeline-api:1.1.1
+    ports:
+      - "3000:3000"
+    environment:
+      - WEBSITE=${WEBSITE}
+      - DB_URL=${DB_URL}
+    depends_on:
+      - db
+
+  worker:
+    image: ghcr.io/combine-social/timeline-worker:1.1.1
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - DB_URL=${DB_URL}
+      - QUEUE_URL=${QUEUE_URL}
+      - WORKER_ID=1
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+
+  web:
+    image: ghcr.io/combine-social/timeline-web:1.0.1
+    ports:
+      - "5173:5173"
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  db:
+    image: "postgres:14.2-alpine"
+    environment:
+     - POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}
+     - POSTGRES_USER=${POSTGRES_USER}
+     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+     - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+
+  rabbitmq:
+    image: "rabbitmq:3.11-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  nginx:
+    image: nginx
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api
+      - web
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cat > /etc/nginx/nginx.conf <<EOF
+          daemon off;
+          user www-data;
+          events {
+
+          }
+          http {
+            upstream webbackend {
+              server web:5173 fail_timeout=20s max_fails=5;
+            }
+            upstream apibackend {
+              server api:3000 fail_timeout=20s max_fails=5;
+            }
+            server {
+              listen 8080;
+              location / {
+                proxy_pass http://webbackend;
+              }
+              location /api {
+                proxy_pass http://apibackend;
+              }
+            }
+          }
+        EOF
+        nginx

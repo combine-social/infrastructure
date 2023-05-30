@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Shared resources for combine.social
+name: Shared
+version: 1.0
