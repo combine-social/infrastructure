@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/combine-social/timeline-web:1.0.1
+        image: ghcr.io/combine-social/timeline-web:1.0.2
         resources:
           requests:
             memory: "128Mi"

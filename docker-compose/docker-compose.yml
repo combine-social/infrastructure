@@ -11,7 +11,7 @@ services:
       - db
 
   worker:
-    image: ghcr.io/combine-social/timeline-worker:1.1.1
+    image: ghcr.io/combine-social/timeline-worker:1.1.2
     environment:
       - REDIS_URL=${REDIS_URL}
       - DB_URL=${DB_URL}
@@ -23,7 +23,7 @@ services:
       - redis
 
   web:
-    image: ghcr.io/combine-social/timeline-web:1.0.1
+    image: ghcr.io/combine-social/timeline-web:1.0.2
     ports:
       - "5173:5173"
 
