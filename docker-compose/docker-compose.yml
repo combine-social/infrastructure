@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   api:
-    image: ghcr.io/combine-social/timeline-api:1.1.1
+    image: ghcr.io/combine-social/timeline-api:1.2.0
     ports:
       - "3000:3000"
     environment:
@@ -23,7 +23,7 @@ services:
       - redis
 
   web:
-    image: ghcr.io/combine-social/timeline-web:1.0.2
+    image: ghcr.io/combine-social/timeline-web:1.1.0
     ports:
       - "5173:5173"
 
