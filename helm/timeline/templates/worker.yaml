@@ -14,16 +14,6 @@ spec:
       labels:
         app: timeline-worker
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - timeline-worker
-            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: worker
         image: ghcr.io/combine-social/timeline-worker-v2:2.1.0
