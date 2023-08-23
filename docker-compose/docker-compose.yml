@@ -11,10 +11,10 @@ services:
       - db
 
   worker:
-    image: ghcr.io/combine-social/timeline-worker:1.1.2
+    image: ghcr.io/combine-social/timeline-worker-v2:2.1.0
     environment:
       - REDIS_URL=${REDIS_URL}
-      - DB_URL=${DB_URL}
+      - DATABASE_URL=${DB_URL}
       - QUEUE_URL=${QUEUE_URL}
       - WORKER_ID=1
     depends_on:

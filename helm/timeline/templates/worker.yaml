@@ -26,7 +26,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
       - name: worker
-        image: ghcr.io/combine-social/timeline-worker:1.1.2
+        image: ghcr.io/combine-social/timeline-worker-v2:2.1.0
         resources:
           requests:
             memory: "1024Mi"
