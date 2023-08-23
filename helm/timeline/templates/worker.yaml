@@ -19,7 +19,7 @@ spec:
         image: ghcr.io/combine-social/timeline-worker-v2:2.1.0
         resources:
           requests:
-            memory: "1024Mi"
+            memory: "256Mi"
         env:
         - name: WORKER_ID
           value: {{ .workerId }}
