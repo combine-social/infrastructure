@@ -4,6 +4,7 @@ All infrastructure is kept in this repository.
 
 ## Folder structure
 
+- [db](db) Database migration scripts.
 - [docker-compose](docker-compose) Docker compose file and example environment file,
 for relatively easy local deployment using docker compose.
 - [helm](helm) Helm charts for deploying on kubernetes.

@@ -1,0 +1,17 @@
+{
+    "name": "migration",
+    "version": "2.0.0",
+    "description": "Shared database migration scripts",
+    "main": "src/migrate.js",
+    "source": "src/migrate.ts",
+    "scripts": {
+        "migrate": "node src/migrate.js",
+        "migrate:local": "POSTGRES_CONNECTION_STRING=postgresql://root:test@127.0.0.1:5432/test node src/migrate.js"
+    },
+    "author": "Anders Borch <anders@cyborch.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@slonik/migrator": "^0.11.3",
+        "slonik": "^29.2.0"
+    }
+}
