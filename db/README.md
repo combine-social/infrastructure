@@ -30,5 +30,5 @@ npm run migrate up
 To create a new migration, run:
 
 ```
-npm run migrate create --name <migration_name>
+npm run migrate create -- --name <migration_name>
 ```
