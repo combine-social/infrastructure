@@ -8,3 +8,12 @@ service and other services.
 ### Secrets
 
 The [secret.yaml](shared/templates/secret.yaml) should be updated with actual secret for your in your setup.
+
+Generating keys for keypairs in the secrets should be done with something like this:
+
+```
+mkdir -p keys
+cd keys
+openssl genrsa -out privkey.pem 2048
+openssl rsa -in privkey.pem -outform PEM -pubout -out pubkey.pem
+```

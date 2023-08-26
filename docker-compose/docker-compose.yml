@@ -10,6 +10,15 @@ services:
     depends_on:
       - db
 
+  actor:
+    image: ghcr.io/combine-social/timeline-actor:1.0.0
+    ports:
+      - "3001:3001"
+    environment:
+      - WEBSITE=${WEBSITE}
+    volumes:
+      - "./keys:/var/lib/actor" # assuming that keypair was created in './keys' folder
+
   worker:
     image: ghcr.io/combine-social/timeline-worker-v2:2.1.0
     environment:

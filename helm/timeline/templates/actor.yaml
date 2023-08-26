@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: combine-social
+  name: timeline-actor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeline-actor
+  template:
+    metadata:
+      labels:
+        app: timeline-actor
+    spec:
+      volumes:
+        - name: actor-volume
+          secret:
+            secretName: pubkey-actor-secret
+            items:
+              - key: pubkey.pem
+                path: pubkey.pem
+      containers:
+      - name: actor
+        image: ghcr.io/combine-social/timeline-actor:1.0.0
+        resources:
+          requests:
+            memory: "256Mi"
+        env:
+        - name: WEBSITE
+          value: {{ .Values.website }}
+        volumeMounts:
+          - name: actor-volume
+            mountPath: "/var/lib/actor/pubkey.pem"
+            subPath: pubkey.pem
+            readOnly: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: timeline-actor
+  namespace: combine-social
+spec:
+  type: ClusterIP
+  ports:
+  - name: timeline-actor
+    port: 3001
+    targetPort: 3001
+  selector:
+    app: timeline-actor
