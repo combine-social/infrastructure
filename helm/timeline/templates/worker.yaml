@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: worker
-        image: ghcr.io/combine-social/timeline-worker-v2:2.1.0
+        image: ghcr.io/combine-social/timeline-worker-v2:2.3.0
         resources:
           requests:
             memory: "256Mi"
@@ -27,6 +27,8 @@ spec:
           value: "redis://redis"
         - name: POLL_INTERVAL
           value: "300"
+        - name: MODE
+          value: {{ .mode }}
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -39,6 +41,10 @@ spec:
               key: rabbitmq-url
 {{- end -}}
 ---
-{{- include "worker" (dict "workerName" "timeline-worker-1" "workerId" "'1'") }}
+{{- include "worker" (dict "workerName" "timeline-worker-1-p" "workerId" "'1'" "mode" "process") }}
 ---
-{{- include "worker" (dict "workerName" "timeline-worker-2" "workerId" "'2'") }}
+{{- include "worker" (dict "workerName" "timeline-worker-1-s" "workerId" "'1'" "mode" "schedule") }}
+---
+{{- include "worker" (dict "workerName" "timeline-worker-2-p" "workerId" "'2'" "mode" "process") }}
+---
+{{- include "worker" (dict "workerName" "timeline-worker-2-s" "workerId" "'2'" "mode" "schedule") }}

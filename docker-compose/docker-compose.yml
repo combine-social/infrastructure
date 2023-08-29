@@ -19,13 +19,27 @@ services:
     volumes:
       - "./keys:/var/lib/actor" # assuming that keypair was created in './keys' folder
 
-  worker:
-    image: ghcr.io/combine-social/timeline-worker-v2:2.1.0
+  processor:
+    image: ghcr.io/combine-social/timeline-worker-v2:2.3.0
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DB_URL}
       - QUEUE_URL=${QUEUE_URL}
       - WORKER_ID=1
+      - MODE=process
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+
+  scheduler:
+    image: ghcr.io/combine-social/timeline-worker-v2:2.3.0
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DB_URL}
+      - QUEUE_URL=${QUEUE_URL}
+      - WORKER_ID=1
+      - MODE=schedule
     depends_on:
       - db
       - rabbitmq
